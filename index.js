@@ -122,13 +122,18 @@ app.get('/r/:subreddit', function(request, response) {
     
     myReddit.getSubredditByName(request.params.subreddit)
     .then((subredditObject) => {
-        subredditId = subredditObject.id;
-        myReddit.getAllPosts(subredditId)
-        .then(posts => {
-            response.render('homepage', {posts: posts});
-        });
-         if(!subredditObject) {
-            response.status(404).send("Subreddit does not exists"); 
+        if(!subredditObject) {
+            response.status(404).send('404! Subreddit does not exists'); 
+        }
+        else {
+            subredditId = subredditObject.id;
+            myReddit.getAllPosts(subredditId)
+            .then(posts => {
+                response.render('homepage', {posts: posts});
+            })
+            .catch(err => {
+                throw new Error('Error!');
+            });
         }
     });
 
@@ -159,12 +164,23 @@ app.post('/vote', onlyLoggedIn, function(request, response) {
 
 // This handler will send out an HTML form for creating a new post
 app.get('/createPost', onlyLoggedIn, function(request, response) {
-    response.send("TO BE IMPLEMENTED");
+    myReddit.getAllSubreddits()
+    .then(subreddits => {
+        response.render('create-post-form', {subreddits: subreddits});
+    });
 });
 
 // POST handler for form submissions creating a new post
 app.post('/createPost', onlyLoggedIn, function(request, response) {
-    response.send("TO BE IMPLEMENTED");
+    myReddit.createPost({
+        title: request.body.title,
+        url: request.body.url,
+        userId: request.loggedInUser.userId,
+        subredditId: request.body.subredditId
+    })
+    .then(result => {
+        response.redirect('/post/:postId');
+    });
 });
 
 // Listen
