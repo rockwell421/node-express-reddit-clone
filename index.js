@@ -158,21 +158,21 @@ The app.* methods of express can actually take multiple middleware, forming a ch
 This basically says: if there is a POST /vote request, first pass it thru the onlyLoggedIn middleware. If that
 middleware calls next(), then also pass it to the final request handler specified.
  */
-app.get('/vote', onlyLoggedIn, function(request, response) {
-    response.render('vote');
-});
+// app.get('/vote', onlyLoggedIn, function(request, response) {
+//     response.render('vote');
+// });
  
 app.post('/vote', onlyLoggedIn, function(request, response) {
     console.log('data');
     myReddit.createVote({
-        postId: request.hidden,
+        postId: request.postId,
         userId: request.loggedInUser.userId,
         voteDirection: request.body.voteDirection,
         voteDirection: request.body.voteDirection
     })
-    .then(vote => {
-        //response.render('vote');
-    });
+    // .then(vote => {
+    //     //response.render('vote');
+    // });
 });
 
 // This handler will send out an HTML form for creating a new post
