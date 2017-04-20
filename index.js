@@ -122,13 +122,18 @@ app.get('/r/:subreddit', function(request, response) {
     
     myReddit.getSubredditByName(request.params.subreddit)
     .then((subredditObject) => {
-        subredditId = subredditObject.id;
-        myReddit.getAllPosts(subredditId)
-        .then(posts => {
-            response.render('homepage', {posts: posts});
-        });
-         if(!subredditObject) {
-            response.status(404).send("Subreddit does not exists"); 
+        if(!subredditObject) {
+            response.status(404).send('404 Subreddit does not exists'); 
+        }
+        else {
+            subredditId = subredditObject.id;
+            myReddit.getAllPosts(subredditId)
+            .then(posts => {
+                response.render('homepage', {posts: posts});
+            })
+            .catch(err => {
+                throw new Error('Error!');
+            });
         }
     });
 
