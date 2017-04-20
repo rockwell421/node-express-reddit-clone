@@ -121,6 +121,7 @@ app.get('/r/:subreddit', function(request, response) {
     var subredditId;
     
     myReddit.getSubredditByName(request.params.subreddit)
+
     .then((subredditObject) => {
         if(!subredditObject) {
             response.status(404).send('404! Subreddit does not exists'); 
@@ -136,8 +137,19 @@ app.get('/r/:subreddit', function(request, response) {
             });
         }
     });
-
 });
+
+//     .then(subredditObject => {
+//         subredditId = subredditObject.id;
+//         myReddit.getAllPosts(subredditId)
+//         .then(posts => {
+//             response.render('homepage', {posts: posts});
+//         });
+//          if(!subredditObject) {
+//             response.status(404).send("Subreddit does not exists"); 
+//         }
+//     });
+
 
 //Notes on params/query
 /*  address        params         query string
@@ -163,6 +175,8 @@ app.get('/sort/:method', function(request, response) {
 
 
 app.get('/post/:postId', function(request, response) {
+    
+    
     response.send("TO BE IMPLEMENTED");
 });
 
