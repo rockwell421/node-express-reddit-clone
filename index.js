@@ -121,7 +121,7 @@ app.get('/r/:subreddit', function(request, response) {
     var subredditId;
     
     myReddit.getSubredditByName(request.params.subreddit)
-    .then((subredditObject) => {
+    .then(subredditObject => {
         subredditId = subredditObject.id;
         myReddit.getAllPosts(subredditId)
         .then(posts => {
@@ -131,8 +131,6 @@ app.get('/r/:subreddit', function(request, response) {
             response.status(404).send("Subreddit does not exists"); 
         }
     });
-
-    //response.send("TO BE IMPLEMENTED");
 });
 
 // Sorted home page
@@ -141,6 +139,8 @@ app.get('/sort/:method', function(request, response) {
 });
 
 app.get('/post/:postId', function(request, response) {
+    
+    
     response.send("TO BE IMPLEMENTED");
 });
 
