@@ -18,13 +18,13 @@ module.exports = function(myReddit) {
         })
         .then(token => {                            
         //console.log(token)
-            response.cookie('SESSION', token);      //express syntax for storing cookie from the response?
+            response.cookie('SESSION', token);      //express syntax for storing cookie from the response to the browser
         })
         .then(useless => {                      //bring user back to the home page)
             response.redirect('/')
             
         })            
-        .catch( error => { //response.render('error', {error: error})
+        .catch(error => { //response.render('error', {error: error})
             response.status(401).send('401 Unauthorized.')
         })
     });
