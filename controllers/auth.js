@@ -4,7 +4,8 @@ module.exports = function(myReddit) {
     var authController = express.Router();
     
     authController.get('/login', function(request, response) {
-        response.send("TO BE IMPLEMENTED");
+        //response.send("TO BE IMPLEMENTED");
+        response.render('login-form');
     });
     
     authController.post('/login', function(request, response) {
@@ -12,11 +13,19 @@ module.exports = function(myReddit) {
     });
     
     authController.get('/signup', function(request, response) {
-        response.send("TO BE IMPLEMENTED");
+        //response.send("TO BE IMPLEMENTED");
+        response.render('signup-form');
     });
     
     authController.post('/signup', function(request, response) {
-        response.send("TO BE IMPLEMENTED");
+        myReddit.createUser({  //returns userID
+            username: request.body.username,
+            password: request.body.password
+        })
+        .then(result => {
+          response.redirect('/auth/login');  
+        });
+        //response.send();
     });
     
     return authController;
