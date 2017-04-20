@@ -4,9 +4,11 @@ block content
     form(method = "POST" action = "/createPost")
         p Subreddit:
             select(name = "subredditId")
-                option(value = 1) FirstSubreddit
-                option(value = 2) SecondSubreddit
+                each subreddit in subreddits
+                    option(value=subreddit.id)=subreddit.name
         p URL:
             input(type = "text" name = "url")
         p Title:
             input(type = "text " name = "title")
+        p 
+            button(type="submit") Post!
