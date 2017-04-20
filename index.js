@@ -121,27 +121,41 @@ app.get('/r/:subreddit', function(request, response) {
     var subredditId;
     
     myReddit.getSubredditByName(request.params.subreddit)
-    .then(subredditObject => {
-        subredditId = subredditObject.id;
-        myReddit.getAllPosts(subredditId)
-        .then(posts => {
-            response.render('homepage', {posts: posts});
-        });
-         if(!subredditObject) {
-            response.status(404).send("Subreddit does not exists"); 
+    .then((subredditObject) => {
+        if(!subredditObject) {
+            response.status(404).send('404! Subreddit does not exists'); 
+        }
+        else {
+            subredditId = subredditObject.id;
+            myReddit.getAllPosts(subredditId)
+            .then(posts => {
+                response.render('homepage', {posts: posts});
+            })
+            // .catch(err => {
+            //     throw new Error('Error!');
+            // });
         }
     });
 });
 
 // Sorted home page
 app.get('/sort/:method', function(request, response) {
-    response.send("TO BE IMPLEMENTED");
+    myReddit.getAllPosts(request.params.method)
+    .then(sortedPosts => response.render('homepage', {posts: sortedPosts}))
+    .catch(() => response.status(401).send('error'));
 });
 
 app.get('/post/:postId', function(request, response) {
-    
-    
-    response.send("TO BE IMPLEMENTED");
+    var postId = request.params.postId;               //:postId is a query parameter retrun as a promise
+    return Promise.all([myReddit.getSinglePost(postId), myReddit.getCommentsForPost(postId)])
+    .then(results =>{
+        var post = results[0];
+        var comments = results[1];
+        response.render('singlepost', {post: post, comments: comments});
+    })
+    .catch(error => {                              
+            response.status(404).send('404 Post does not exist');
+        });
 });
 
 /*
