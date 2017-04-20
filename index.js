@@ -137,13 +137,30 @@ app.get('/r/:subreddit', function(request, response) {
         }
     });
 
-    //response.send("TO BE IMPLEMENTED");
 });
+
+//Notes on params/query
+/*  address        params         query string
+www.reddit.com   /sort/top/7   ?candies=lots&cars=5
+
+  request.params is === { method: top, page: 4 }
+  request.query is === { candies: lots, cars: 5 }
+*/
+
 
 // Sorted home page
 app.get('/sort/:method', function(request, response) {
-    response.send("TO BE IMPLEMENTED");
+    
+    myReddit.getAllPosts(request.params.method)
+    .then(results =>{
+        response.render('homepage', {posts: results})
+    })
+    .catch(error =>{
+        response.status(404).send('404 error!');
+    })
+    
 });
+
 
 app.get('/post/:postId', function(request, response) {
     response.send("TO BE IMPLEMENTED");
