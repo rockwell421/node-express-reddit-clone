@@ -2,7 +2,8 @@ extends layout.pug
 block content
     form(action="/vote" method="post")
         h1 Vote here!
-        input(type="hidden" name="postId" value="THE ID OF THE CURRENT POST")
+        
+        input(type="hidden" name="postId" value=`${post.id}`)
         p
             button(type="submit" value="1") upvote this  
             button(type="submit" value="-1") downvote this
