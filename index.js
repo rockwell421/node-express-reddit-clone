@@ -102,7 +102,7 @@ app.get('/', function(request, response) {
     })
     .catch(function(error) {
         response.render('error', {error: error});
-    })
+    });
 });
 
 // Listing of subreddits
@@ -117,7 +117,22 @@ app.get('/subreddits', function(request, response) {
 
 // Subreddit homepage, similar to the regular home page but filtered by sub.
 app.get('/r/:subreddit', function(request, response) {
-    response.send("TO BE IMPLEMENTED");
+    
+    var subredditId;
+    
+    myReddit.getSubredditByName(request.params.subreddit)
+    .then((subredditObject) => {
+        subredditId = subredditObject.id;
+        myReddit.getAllPosts(subredditId)
+        .then(posts => {
+            response.render('homepage', {posts: posts});
+        });
+         if(!subredditObject) {
+            response.status(404).send("Subreddit does not exists"); 
+        }
+    });
+
+    //response.send("TO BE IMPLEMENTED");
 });
 
 // Sorted home page
