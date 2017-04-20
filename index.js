@@ -131,9 +131,11 @@ app.get('/r/:subreddit', function(request, response) {
             .then(posts => {
                 response.render('homepage', {posts: posts});
             })
+
             // .catch(err => {
             //     throw new Error('Error!');
             // });
+
         }
     });
 });
@@ -167,18 +169,42 @@ The app.* methods of express can actually take multiple middleware, forming a ch
 This basically says: if there is a POST /vote request, first pass it thru the onlyLoggedIn middleware. If that
 middleware calls next(), then also pass it to the final request handler specified.
  */
+// app.get('/vote', onlyLoggedIn, function(request, response) {
+//     response.render('vote');
+// });
+ 
 app.post('/vote', onlyLoggedIn, function(request, response) {
-    response.send("TO BE IMPLEMENTED");
+    console.log('data');
+    myReddit.createVote({
+        postId: request.postId,
+        userId: request.loggedInUser.userId,
+        voteDirection: request.body.voteDirection,
+        voteDirection: request.body.voteDirection
+    })
+    // .then(vote => {
+    //     //response.render('vote');
+    // });
 });
 
 // This handler will send out an HTML form for creating a new post
 app.get('/createPost', onlyLoggedIn, function(request, response) {
-    response.send("TO BE IMPLEMENTED");
+    myReddit.getAllSubreddits()
+    .then(subreddits => {
+        response.render('create-post-form', {subreddits: subreddits});
+    });
 });
 
 // POST handler for form submissions creating a new post
 app.post('/createPost', onlyLoggedIn, function(request, response) {
-    response.send("TO BE IMPLEMENTED");
+    myReddit.createPost({
+        title: request.body.title,
+        url: request.body.url,
+        userId: request.loggedInUser.userId,
+        subredditId: request.body.subredditId
+    })
+    .then(result => {
+        response.redirect('/post/:postId');
+    });
 });
 
 // Listen
