@@ -123,7 +123,7 @@ app.get('/r/:subreddit', function(request, response) {
     myReddit.getSubredditByName(request.params.subreddit)
     .then((subredditObject) => {
         if(!subredditObject) {
-            response.status(404).send('404 Subreddit does not exists'); 
+            response.status(404).send('404! Subreddit does not exists'); 
         }
         else {
             subredditId = subredditObject.id;
@@ -164,7 +164,8 @@ app.post('/vote', onlyLoggedIn, function(request, response) {
 
 // This handler will send out an HTML form for creating a new post
 app.get('/createPost', onlyLoggedIn, function(request, response) {
-    response.send("TO BE IMPLEMENTED");
+    response.render('create-post-form')
+    //response.send("TO BE IMPLEMENTED");
 });
 
 // POST handler for form submissions creating a new post

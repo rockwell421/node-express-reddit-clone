@@ -1,0 +1,12 @@
+extends layout.pug
+block content
+    h1 Share a new link!
+    form(method = "POST" action = "/createPost")
+        p Subreddit:
+            select(name = "subredditId")
+                option(value = 1) FirstSubreddit
+                option(value = 2) SecondSubreddit
+        p URL:
+            input(type = "text" name = "url")
+        p Title:
+            input(type = "text " name = "title")
