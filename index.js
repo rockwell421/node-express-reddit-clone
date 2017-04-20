@@ -121,31 +121,44 @@ app.get('/r/:subreddit', function(request, response) {
     var subredditId;
     
     myReddit.getSubredditByName(request.params.subreddit)
-    .then((subredditObject) => {
-        if(!subredditObject) {
-            response.status(404).send('404! Subreddit does not exists'); 
-        }
-        else {
-            subredditId = subredditObject.id;
-            myReddit.getAllPosts(subredditId)
-            .then(posts => {
-                response.render('homepage', {posts: posts});
-            })
 
-            // .catch(err => {
-            //     throw new Error('Error!');
-            // });
-
+        .then(subredditObject => {
+        subredditId = subredditObject.id;
+        myReddit.getAllPosts(subredditId)
+        .then(posts => {
+            response.render('homepage', {posts: posts});
+        });
+         if(!subredditObject) {
+            response.status(404).send("Subreddit does not exists"); 
         }
     });
 });
 
+
+
+//Notes on params/query
+/*  address        params         query string
+www.reddit.com   /sort/top/7   ?candies=lots&cars=5
+
+  request.params is === { method: top, page: 4 }
+  request.query is === { candies: lots, cars: 5 }
+*/
+
+
 // Sorted home page
 app.get('/sort/:method', function(request, response) {
+    
     myReddit.getAllPosts(request.params.method)
-    .then(sortedPosts => response.render('homepage', {posts: sortedPosts}))
-    .catch(() => response.status(401).send('error'));
+    .then(results =>{
+        response.render('homepage', {posts: results})
+    })
+    .catch(error =>{
+        response.status(404).send('404 error!');
+    })
+    
+
 });
+
 
 app.get('/post/:postId', function(request, response) {
     var postId = request.params.postId;               //:postId is a query parameter retrun as a promise

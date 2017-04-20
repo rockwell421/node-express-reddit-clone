@@ -3,7 +3,12 @@ include mixins/post-list
 
 block title
     title Welcome to Reddit Clone!!!
-
+    
 block content
     h1 Welcome to Reddit!!!
+    a(href='/sort/hot') Hot 
+    a(href='/sort/top') Top 
+    
+
+        
     +postList(posts)
