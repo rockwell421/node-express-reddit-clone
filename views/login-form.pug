@@ -2,10 +2,11 @@ extends layout.pug
 
 block content
     h1 Login
-    form(action = '/auth/login' method="POST")
-        p Username:
+    form(action = "/auth/login" method="POST")
+        p Username: 
             input(type="text" name="username")
-        p Password:
+        P Password:
             input(type="password" name="password")
-        p
+        p 
             button(type="submit") Login!
+    
