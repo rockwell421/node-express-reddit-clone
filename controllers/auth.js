@@ -5,7 +5,9 @@ module.exports = function(myReddit) {
     var authController = express.Router();
     
     authController.get('/login', function(request, response) {
+
         response.render("login-form");
+
     });
     
     
@@ -36,13 +38,13 @@ module.exports = function(myReddit) {
   
     
     authController.post('/signup', function(request, response) {
-        myReddit.createUser({
+        myReddit.createUser({  //returns userID
             username: request.body.username,
             password: request.body.password
-            }).then(result => {
-                response.redirect("/auth/login");
-            }); 
-        //  response.send();
+        })
+        .then(result => {
+          response.redirect('/auth/login');  
+        });
     });
     
     return authController;
