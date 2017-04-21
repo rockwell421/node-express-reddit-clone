@@ -173,6 +173,7 @@ app.get('/post/:postId', function(request, response) {
     .then(results =>{
         var post = results[0];
         var comments = results[1];
+        console.log(post)
         response.render('singlepost', {post: post, comments: comments});
     })
     .catch(error => {                              
@@ -228,6 +229,18 @@ app.post('/createPost', onlyLoggedIn, function(request, response) {
     })
     .then(result => {
         response.redirect('/post/:postId');
+    });
+});
+
+app.post('/createComment', onlyLoggedIn, function(request, response) {
+    //console.log(request)
+    myReddit.createComment({
+        postId: request.body.postId,
+        userId: request.loggedInUser.userId,
+        text: request.body.comment
+    })
+    .then(result => {
+        response.redirect(request.get('referer'));
     });
 });
 

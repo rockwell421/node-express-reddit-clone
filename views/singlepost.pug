@@ -12,11 +12,16 @@ block content
            span   in  
            a(href="/r/" + post.subreddit.name) /r/#{post.subreddit.name}
        p Score: #{post.voteScore} Upvotes: #{post.numUpvotes} Downvotes: #{post.numDownvotes}
-   
+        
    h3
+       form(action="/createComment" method="post")
+           input(type="hidden" name="postId" value=post.id)
+           input(type="text" name="comment" value=post.text)
+           button(type="submit") Post NEW Comments
        p Comments:
            ul
                each comment in comments
                    li #{comment.text}
                    p(class='comment-author') Created by  
                        a(href="/u/" + comment.user.username)= comment.user.username
+                   
