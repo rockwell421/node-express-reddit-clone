@@ -8,7 +8,10 @@ mixin postList(posts)
                         a(href="/u/" + post.user.users_username)= post.user.users_username
                         span  in
                         a(href="/r/" + post.subreddits.subreddits_name) /r/#{post.subreddits.subreddits_name}
+                    p 
+                        a(href="/post/"+ post.posts_id) View Comments
                     p Score: #{post.voteScore} Upvotes: #{post.numUpvotes} Downvotes: #{post.numDownvotes}
+
                         form(action="/vote" method="post")
                             input(type="hidden" name="postId" value=post.posts_id)
                             button(type="submit" name="voteDirection" value='1') upvote this  

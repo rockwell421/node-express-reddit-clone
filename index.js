@@ -98,6 +98,7 @@ app.use('/static', express.static(__dirname + '/public'));
 app.get('/', function(request, response) {
     myReddit.getAllPosts()
     .then(function(posts) {
+        //console.log(posts)
         response.render('homepage', {posts: posts});
     })
     .catch(function(error) {
@@ -126,33 +127,19 @@ app.get('/r/:subreddit', function(request, response) {
     
     myReddit.getSubredditByName(request.params.subreddit)
 
-    .then((subredditObject) => {
-        if(!subredditObject) {
-            response.status(404).send('404! Subreddit does not exists'); 
-        }
-        else {
-            subredditId = subredditObject.id;
-            myReddit.getAllPosts(subredditId)
-            .then(posts => {
-                response.render('homepage', {posts: posts});
-            })
-            .catch(err => {
-                throw new Error('Error!');
-            });
+
+        .then(subredditObject => {
+        subredditId = subredditObject.id;
+        myReddit.getAllPosts(subredditId)
+        .then(posts => {
+            response.render('homepage', {posts: posts});
+        });
+         if(!subredditObject) {
+            response.status(404).send("Subreddit does not exists"); 
         }
     });
 });
 
-//     .then(subredditObject => {
-//         subredditId = subredditObject.id;
-//         myReddit.getAllPosts(subredditId)
-//         .then(posts => {
-//             response.render('homepage', {posts: posts});
-//         });
-//          if(!subredditObject) {
-//             response.status(404).send("Subreddit does not exists"); 
-//         }
-//     });
 
 
 //Notes on params/query
@@ -186,6 +173,7 @@ app.get('/post/:postId', function(request, response) {
     .then(results =>{
         var post = results[0];
         var comments = results[1];
+        console.log(post)
         response.render('singlepost', {post: post, comments: comments});
     })
     .catch(error => {                              
@@ -217,18 +205,19 @@ middleware calls next(), then also pass it to the final request handler specifie
  */
 
 app.post('/vote', onlyLoggedIn, function(request, response) {
-    myReddit.createVote({
-        userId: request.loggedInUser.userId,
+    console.log(request.body);
+   
+    var vote = {
         postId: parseInt(request.body.postId),
-        voteDirection: parseInt(request.body.voteDirection),
+        userId: request.loggedInUser.userId,
         voteDirection: parseInt(request.body.voteDirection)
-    })
+    };
+    myReddit.createVote(vote)
     .then(result => {
-        response.redirect(request.get('referer'))
-    });
-    // .then(vote => {
-    //     //response.render('vote');
-    // });
+        response.redirect(request.get('referer')); 
+    })
+    .catch(e => console.log(e));
+
 });
 
 
@@ -255,6 +244,19 @@ app.post('/createPost', onlyLoggedIn, function(request, response) {
     });
 });
 
+// POST handler for from submissions creating a new comment in Single Post View
+app.post('/createComment', onlyLoggedIn, function(request, response) {
+    //console.log(request)
+    myReddit.createComment({
+        postId: request.body.postId,
+        userId: request.loggedInUser.userId,
+        text: request.body.comment
+    })
+    .then(result => {
+        response.redirect(request.get('referer'));
+    });
+});
+
 // GET hendler from logout
 app.get('/logout', function(request, response) {
     console.log(request.loggedInUser.userId);
@@ -269,6 +271,7 @@ app.get('/logout', function(request, response) {
     else {
         response.redirect('/');
     }
+
 });
 
 // Listen

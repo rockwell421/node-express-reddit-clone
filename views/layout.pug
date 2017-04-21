@@ -9,6 +9,7 @@ html
         header
             if loggedInUser
                 p Welcome #{loggedInUser.username}
+                a(href="/") Homepage
             else
                 ul
                     li
