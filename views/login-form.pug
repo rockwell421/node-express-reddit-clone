@@ -1,12 +1,13 @@
 extends layout.pug
 
 block content
-  h1 login
-  form(action='/auth/login', method="POST")
-    p
-      | Username:
-      input(type="text", name="username")
-    p
-      | Password:
-      input(type="password", name="password")
-    button(type="submit") Login
+  .header
+    h1 login
+    form(action='/auth/login', method="POST")
+      p
+        | Username:
+        input(type="text", name="username")
+      p
+        | Password:
+        input(type="password", name="password")
+      button(type="submit") Login

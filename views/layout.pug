@@ -4,12 +4,11 @@ html
         meta(charset="utf-8")
         link(rel="stylesheet", href="/static/app.css")
         block title
-            title Redit Clone
+            title Reddit Clone
     body
         header
             if loggedInUser
                 p Welcome #{loggedInUser.username}
-                a(href="/") Homepage
             else
                 ul
                     li

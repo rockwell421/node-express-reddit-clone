@@ -1,12 +1,14 @@
 mixin postList(posts)
     ul.post-list
         each post in posts
+            hr
+            .body-reddits
             li.post
                 h2
                     a(href=post.posts_url, target="_blank")= post.posts_title
-                    p Submitted by
+                    p Submitted by 
                         a(href="/u/" + post.user.users_username)= post.user.users_username
-                        span  in
+                        span  in 
                         a(href="/r/" + post.subreddits.subreddits_name) /r/#{post.subreddits.subreddits_name}
                     p 
                         a(href="/post/"+ post.posts_id) View Comments
@@ -14,6 +16,7 @@ mixin postList(posts)
 
                         form(action="/vote" method="post")
                             input(type="hidden" name="postId" value=post.posts_id)
-                            button(type="submit" name="voteDirection" value='1') upvote this  
-                            button(type="submit" name="voteDirection" value='-1') downvote this
-
+                            button(type="submit" name="voteDirection" value='1') Upvote
+                            button(type="submit" name="voteDirection" value='-1') Downvote
+                    br
+                    

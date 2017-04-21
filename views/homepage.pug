@@ -15,17 +15,14 @@ block content
             img(src='http://www.iconsdb.com/icons/preview/white/reddit-xxl.png', height='75', width='75')
             br
             h1 Reddit Time
-            
         #button-box
+            a(href="/")
+                .button(type='button') Home
             a(href='/createPost')
-                .button(type='button') Create Post
-            a(href='/createPost')
-                .button(type='button') Subreddits
-            
-        #button-box2
+                .button(type='button') Submit
             a(href='/sort/hot')   
-                .button(type='button') HOT
+                .button(type='button') HOT*
             a(href='/sort/top')
-                .button(type='button') TOP
+                .button(type='button') TOP+
 
         +postList(posts)
