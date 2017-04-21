@@ -224,6 +224,7 @@ app.post('/vote', onlyLoggedIn, function(request, response) {
 
 // This handler will send out an HTML form for creating a new post
 app.get('/createPost', onlyLoggedIn, function(request, response) {
+    
     myReddit.getAllSubreddits()
     .then(subreddits => {
         response.render('create-post-form', {subreddits: subreddits});
@@ -241,6 +242,22 @@ app.post('/createPost', onlyLoggedIn, function(request, response) {
     .then(result => {
         response.redirect('/post/:postId');
     });
+});
+
+// GET hendler from logout
+app.get('/logout', function(request, response) {
+    console.log(request.loggedInUser.userId);
+    var userId = request.loggedInUser.userId || false;
+    response.clearCookie('SESSIOIN');
+    if(userId) {
+        myReddit.deleteSession(userId)
+        .then(result => {
+            response.redirect('/');
+        });
+    }
+    else {
+        response.redirect('/');
+    }
 });
 
 // Listen
