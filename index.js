@@ -195,6 +195,7 @@ middleware calls next(), then also pass it to the final request handler specifie
 // });
  
 
+
 app.post('/vote', onlyLoggedIn, function(request, response) {
     console.log(request.body);
    
@@ -208,11 +209,13 @@ app.post('/vote', onlyLoggedIn, function(request, response) {
         response.redirect(request.get('referer')); 
     })
     .catch(e => console.log(e));
+
 });
 
 
 // This handler will send out an HTML form for creating a new post
 app.get('/createPost', onlyLoggedIn, function(request, response) {
+    
     myReddit.getAllSubreddits()
     .then(subreddits => {
         response.render('create-post-form', {subreddits: subreddits});
@@ -232,6 +235,7 @@ app.post('/createPost', onlyLoggedIn, function(request, response) {
     });
 });
 
+// POST handler for from submissions creating a new comment in Single Post View
 app.post('/createComment', onlyLoggedIn, function(request, response) {
     //console.log(request)
     myReddit.createComment({
@@ -242,6 +246,23 @@ app.post('/createComment', onlyLoggedIn, function(request, response) {
     .then(result => {
         response.redirect(request.get('referer'));
     });
+});
+
+// GET hendler from logout
+app.get('/logout', function(request, response) {
+    console.log(request.loggedInUser.userId);
+    var userId = request.loggedInUser.userId || false;
+    response.clearCookie('SESSIOIN');
+    if(userId) {
+        myReddit.deleteSession(userId)
+        .then(result => {
+            response.redirect('/');
+        });
+    }
+    else {
+        response.redirect('/');
+    }
+
 });
 
 // Listen
