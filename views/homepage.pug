@@ -5,6 +5,7 @@ block title
     title Welcome to Reddit Clone!!!
     
 block content
+
     body
         .header
             br
@@ -12,11 +13,17 @@ block content
             img(src='http://www.iconsdb.com/icons/preview/white/reddit-xxl.png', height='75', width='75')
             br
             h1 Reddit Time
-        
+
+    if loggedInUser
+        p
+            a(href='/createPost') Create Post
+            a(href='/logout') Logout
+
         #button-box
             .button(type='button') Create Post
             .button(type='button') Subreddits
             .button(type='button') Signup
+            
         #button-box2
             a(href='/sort/hot')   
                 .button(type='button') HOT

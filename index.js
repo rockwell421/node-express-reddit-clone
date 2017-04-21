@@ -207,6 +207,7 @@ middleware calls next(), then also pass it to the final request handler specifie
 // });
  
 
+
  
  /* Vote handler explained
  When a vote request is sent, we need to verify that the user is signed up and logged in.
@@ -214,10 +215,6 @@ middleware calls next(), then also pass it to the final request handler specifie
  2.Once those promises are resolved, return the object's postId, userId, and voteDirection- but get their numerical value
  
  */
-
-
-
-
 
 app.post('/vote', onlyLoggedIn, function(request, response) {
     myReddit.createVote({
@@ -236,9 +233,9 @@ app.post('/vote', onlyLoggedIn, function(request, response) {
 
 
 
-
 // This handler will send out an HTML form for creating a new post
 app.get('/createPost', onlyLoggedIn, function(request, response) {
+    
     myReddit.getAllSubreddits()
     .then(subreddits => {
         response.render('create-post-form', {subreddits: subreddits});
@@ -256,6 +253,22 @@ app.post('/createPost', onlyLoggedIn, function(request, response) {
     .then(result => {
         response.redirect('/post/:postId');
     });
+});
+
+// GET hendler from logout
+app.get('/logout', function(request, response) {
+    console.log(request.loggedInUser.userId);
+    var userId = request.loggedInUser.userId || false;
+    response.clearCookie('SESSIOIN');
+    if(userId) {
+        myReddit.deleteSession(userId)
+        .then(result => {
+            response.redirect('/');
+        });
+    }
+    else {
+        response.redirect('/');
+    }
 });
 
 // Listen
