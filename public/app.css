@@ -1,3 +1,34 @@
+header {
+   background: gray;
+   width: 100%;
+   height: 25px;
+   color: white;
+   height: 100%;
+   margin-top: 0px;
+    
+}
+
+h1 {
+  color: white;
+  margin: 0px;
+  background: linear-gradient(to left, orange, purple);
+  background-color: gray;
+  height: 100px;
+  width: 100%;
+  text-align: center;
+  padding: 50px 0px 0px 0px;
+  width: 100%;
+}
+
 body {
     font-family: Helvetica, arial, sans-serif;
+    text-align: center;
+}
+
+ul {
+
+list-style-type: none;
+margin: 0;
+padding: 0px;
+overflow: hidden;
 }
