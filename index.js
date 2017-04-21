@@ -189,29 +189,16 @@ middleware calls next(), then also pass it to the final request handler specifie
  
 app.post('/vote', onlyLoggedIn, function(request, response) {
     console.log(request.body);
+   
     var vote = {
-        voteDirection: request.body.voteDirection,
-        postId: request.body.postId,
-        userId: request.loggedInUser.userId
-    }
+        postId: parseInt(request.body.postId),
+        userId: request.loggedInUser.userId,
+        voteDirection: parseInt(request.body.voteDirection)
+    };
     myReddit.createVote(vote)
     .then(result => {
-        response.redirect(request.get('referer'));
+        response.redirect(request.get('referer')); 
     })
-    
-    // return Promise.all([myReddit.getUserFromSession(request.cookies.SESSION), request.body])
-    // .then(result => {  console.log(result);  
-    //     return {     userId : result[0].id,
-    //                  postId : Number(result[1].postId),
-    //                  voteDirection: Number(result[1].vote)
-    //     };
-    // })
-    // .then(result => {
-    //   return  myReddit.createVote(result);
-    // })
-    // .then(result => {
-    //     response.redirect(`${request.header('Referer')}`);
-    // })
     .catch(e => console.log(e));
 });
 
