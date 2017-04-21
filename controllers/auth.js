@@ -10,7 +10,7 @@ module.exports = function(myReddit) {
     });
     
     authController.post('/login', function(request, response) {
-        //console.log(request.body);
+        console.log(request.body);
         myReddit.checkUserLogin(request.body.username, request.body.password)
         .then(result => {                                   //login success
             return myReddit.createUserSession(result.id);   

@@ -206,6 +206,7 @@ middleware calls next(), then also pass it to the final request handler specifie
 //     response.render('vote');
 // });
  
+
  
  /* Vote handler explained
  When a vote request is sent, we need to verify that the user is signed up and logged in.
@@ -213,42 +214,25 @@ middleware calls next(), then also pass it to the final request handler specifie
  2.Once those promises are resolved, return the object's postId, userId, and voteDirection- but get their numerical value
  
  */
- 
-app.post('/vote', onlyLoggedIn, (request, response) => {
-    return Promise.all([myReddit.getUserFromSession(request.cookies.SESSION), request.body]) 
-    .then(result => {    
-         return {    postId : Number(result[1].postId),
-                     userId : result[0].id,
-                     voteDirection: Number(result[1].vote) };
+
+
+
+
+
+app.post('/vote', onlyLoggedIn, function(request, response) {
+    myReddit.createVote({
+        userId: request.loggedInUser.userId,
+        postId: parseInt(request.body.postId),
+        voteDirection: parseInt(request.body.voteDirection),
+        voteDirection: parseInt(request.body.voteDirection)
     })
     .then(result => {
-         return  myReddit.createVote(result);
-    })
-    .then(result => {
-        response.redirect(`${request.header('Referer')}`);
-    })
-    .catch(e => console.log(e));
-}); 
- 
- 
-// app.post('/vote', onlyLoggedIn, function(request, response) {
-    
-    
-//     console.log('data');
-//     myReddit.createVote({
-//         postId: request.postId,
-//         userId: request.loggedInUser.userId,
-//         voteDirection: request.body.voteDirection,
-//         voteDirection: request.body.voteDirection
-//     })
-//     // .then(vote => {
-//     //     //response.render('vote');
-//     // });
-// });
-
-
-
-
+        response.redirect(request.get('referer'))
+    });
+    // .then(vote => {
+    //     //response.render('vote');
+    // });
+});
 
 
 
