@@ -105,6 +105,8 @@ app.get('/', function(request, response) {
     });
 });
 
+
+
 // Listing of subreddits
 app.get('/subreddits', function(request, response) {
     /*
@@ -114,6 +116,8 @@ app.get('/subreddits', function(request, response) {
     
     response.send("TO BE IMPLEMENTED");
 });
+
+
 
 // Subreddit homepage, similar to the regular home page but filtered by sub.
 app.get('/r/:subreddit', function(request, response) {
@@ -132,7 +136,6 @@ app.get('/r/:subreddit', function(request, response) {
             .then(posts => {
                 response.render('homepage', {posts: posts});
             })
-
             .catch(err => {
                 throw new Error('Error!');
             });
@@ -202,18 +205,45 @@ middleware calls next(), then also pass it to the final request handler specifie
 //     response.render('vote');
 // });
  
-app.post('/vote', onlyLoggedIn, function(request, response) {
-    console.log('data');
-    myReddit.createVote({
-        postId: request.postId,
-        userId: request.loggedInUser.userId,
-        voteDirection: request.body.voteDirection,
-        voteDirection: request.body.voteDirection
+ 
+app.post('/vote', onlyLoggedIn, (request, response) => {
+    return Promise.all([myReddit.getUserFromSession(request.cookies.SESSION), request.body])
+    .then(result => {    
+        return { postId : Number(result[1].postId),
+                     userId : result[0].id,
+                     voteDirection: Number(result[1].vote) };
     })
-    // .then(vote => {
-    //     //response.render('vote');
-    // });
-});
+    .then(result => {
+      return  myReddit.createVote(result);
+    })
+    .then(result => {
+        response.redirect(`${request.header('Referer')}`);
+    })
+    .catch(e => console.log(e));
+}); 
+ 
+ 
+// app.post('/vote', onlyLoggedIn, function(request, response) {
+    
+    
+//     console.log('data');
+//     myReddit.createVote({
+//         postId: request.postId,
+//         userId: request.loggedInUser.userId,
+//         voteDirection: request.body.voteDirection,
+//         voteDirection: request.body.voteDirection
+//     })
+//     // .then(vote => {
+//     //     //response.render('vote');
+//     // });
+// });
+
+
+
+
+
+
+
 
 // This handler will send out an HTML form for creating a new post
 app.get('/createPost', onlyLoggedIn, function(request, response) {
