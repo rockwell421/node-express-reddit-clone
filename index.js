@@ -106,6 +106,8 @@ app.get('/', function(request, response) {
     });
 });
 
+
+
 // Listing of subreddits
 app.get('/subreddits', function(request, response) {
     /*
@@ -116,12 +118,15 @@ app.get('/subreddits', function(request, response) {
     response.send("TO BE IMPLEMENTED");
 });
 
+
+
 // Subreddit homepage, similar to the regular home page but filtered by sub.
 app.get('/r/:subreddit', function(request, response) {
     
     var subredditId;
     
     myReddit.getSubredditByName(request.params.subreddit)
+
 
         .then(subredditObject => {
         subredditId = subredditObject.id;
@@ -149,11 +154,12 @@ www.reddit.com   /sort/top/7   ?candies=lots&cars=5
 // Sorted home page
 app.get('/sort/:method', function(request, response) {
     
-    myReddit.getAllPosts(request.params.method)
-    .then(results =>{
-        response.render('homepage', {posts: results})
+    myReddit.getAllPosts(undefined, request.params.method)
+    .then(posts =>{
+        response.render('homepage', {posts: posts})
     })
     .catch(error =>{
+        console.log(error);
         response.status(404).send('404 error!');
     })
     
@@ -187,6 +193,7 @@ middleware calls next(), then also pass it to the final request handler specifie
 //     response.render('vote');
 // });
  
+
 app.post('/vote', onlyLoggedIn, function(request, response) {
     console.log(request.body);
    
@@ -201,6 +208,7 @@ app.post('/vote', onlyLoggedIn, function(request, response) {
     })
     .catch(e => console.log(e));
 });
+
 
 // This handler will send out an HTML form for creating a new post
 app.get('/createPost', onlyLoggedIn, function(request, response) {
