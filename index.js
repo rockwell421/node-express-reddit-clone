@@ -98,6 +98,7 @@ app.use('/static', express.static(__dirname + '/public'));
 app.get('/', function(request, response) {
     myReddit.getAllPosts()
     .then(function(posts) {
+        //console.log(posts)
         response.render('homepage', {posts: posts});
     })
     .catch(function(error) {
@@ -187,16 +188,31 @@ middleware calls next(), then also pass it to the final request handler specifie
 // });
  
 app.post('/vote', onlyLoggedIn, function(request, response) {
-    console.log('data');
-    myReddit.createVote({
-        postId: request.postId,
-        userId: request.loggedInUser.userId,
+    console.log(request.body);
+    var vote = {
         voteDirection: request.body.voteDirection,
-        voteDirection: request.body.voteDirection
+        postId: request.body.postId,
+        userId: request.loggedInUser.userId
+    }
+    myReddit.createVote(vote)
+    .then(result => {
+        response.redirect(request.get('referer'));
     })
-    // .then(vote => {
-    //     //response.render('vote');
-    // });
+    
+    // return Promise.all([myReddit.getUserFromSession(request.cookies.SESSION), request.body])
+    // .then(result => {  console.log(result);  
+    //     return {     userId : result[0].id,
+    //                  postId : Number(result[1].postId),
+    //                  voteDirection: Number(result[1].vote)
+    //     };
+    // })
+    // .then(result => {
+    //   return  myReddit.createVote(result);
+    // })
+    // .then(result => {
+    //     response.redirect(`${request.header('Referer')}`);
+    // })
+    .catch(e => console.log(e));
 });
 
 // This handler will send out an HTML form for creating a new post
