@@ -1,5 +1,7 @@
 var express = require('express');
 var mysql = require('promise-mysql');
+var emoji = require('node-emoji');
+
 
 // Express middleware
 var bodyParser = require('body-parser'); // reads request bodies from POST requests
@@ -173,7 +175,11 @@ app.get('/post/:postId', function(request, response) {
     .then(results =>{
         var post = results[0];
         var comments = results[1];
-        console.log(post)
+        console.log(post);
+        comments = comments.map(comment =>{
+            comment.text = emoji.emojify(comment.text)
+            return comment;
+        }) 
         response.render('singlepost', {post: post, comments: comments});
     })
     .catch(error => {                              
