@@ -167,11 +167,12 @@ www.reddit.com   /sort/top/7   ?candies=lots&cars=5
 // Sorted home page
 app.get('/sort/:method', function(request, response) {
     
-    myReddit.getAllPosts(request.params.method)
-    .then(results =>{
-        response.render('homepage', {posts: results})
+    myReddit.getAllPosts(undefined, request.params.method)
+    .then(posts =>{
+        response.render('homepage', {posts: posts})
     })
     .catch(error =>{
+        console.log(error);
         response.status(404).send('404 error!');
     })
     
@@ -206,15 +207,22 @@ middleware calls next(), then also pass it to the final request handler specifie
 // });
  
  
+ /* Vote handler explained
+ When a vote request is sent, we need to verify that the user is signed up and logged in.
+ 1.Use Promise.all to get the future value of the object [session cookies, request.body] to verify that the user is logged in
+ 2.Once those promises are resolved, return the object's postId, userId, and voteDirection- but get their numerical value
+ 
+ */
+ 
 app.post('/vote', onlyLoggedIn, (request, response) => {
-    return Promise.all([myReddit.getUserFromSession(request.cookies.SESSION), request.body])
+    return Promise.all([myReddit.getUserFromSession(request.cookies.SESSION), request.body]) 
     .then(result => {    
-        return { postId : Number(result[1].postId),
+         return {    postId : Number(result[1].postId),
                      userId : result[0].id,
                      voteDirection: Number(result[1].vote) };
     })
     .then(result => {
-      return  myReddit.createVote(result);
+         return  myReddit.createVote(result);
     })
     .then(result => {
         response.redirect(`${request.header('Referer')}`);
